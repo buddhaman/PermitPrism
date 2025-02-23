@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cJSON.h"
+#include "cJSON.c"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winhttp.h>
+
 
 LPSTR make_http_request(LPCWSTR host, INTERNET_PORT port, LPCWSTR path, int use_https, const char* content_type, const char* payload) {
     HINTERNET hInternet = WinHttpOpen(L"WinHTTP Example/1.0",  
@@ -201,11 +205,32 @@ int main() {
     if (response) {
         printf("License verification response: %s\n", response);
 
-        // You could parse the JSON response here to check valid/features
-        if (strstr(response, "\"valid\":true") != NULL) {
-            printf("License is valid!\n");
+        // Parse the JSON response
+        cJSON *json = cJSON_Parse(response);
+        if (json == NULL) {
+            fprintf(stderr, "Error parsing JSON response\n");
         } else {
-            printf("License is invalid!\n");
+            cJSON *valid = cJSON_GetObjectItemCaseSensitive(json, "valid");
+            if (cJSON_IsBool(valid)) {
+                if (cJSON_IsTrue(valid)) {
+                    printf("License is valid!\n");
+                } else {
+                    printf("License is invalid!\n");
+                }
+            }
+
+            cJSON *features = cJSON_GetObjectItemCaseSensitive(json, "features");
+            if (cJSON_IsArray(features)) {
+                printf("Features:\n");
+                cJSON *feature;
+                cJSON_ArrayForEach(feature, features) {
+                    if (cJSON_IsString(feature)) {
+                        printf(" - %s\n", feature->valuestring);
+                    }
+                }
+            }
+
+            cJSON_Delete(json);
         }
 
         free(response);
