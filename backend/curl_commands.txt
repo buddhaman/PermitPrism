@@ -1,0 +1,3 @@
+curl -X POST http://localhost:8080/generate \
+  -H "Content-Type: application/json" \
+  -d '{"customer_id":"CUST123","features":["basic","pro"]}'
