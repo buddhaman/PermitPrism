@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PermitPrism</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .banner {
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .banner-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .banner-text h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+        .banner-text p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .content {
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .content h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .feature {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: left;
+        }
+        .feature h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .cta-button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #0070f3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .cta-button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="permitprism.webp" alt="PermitPrism Banner">
+        <div class="banner-text">
+            <h1>Welcome to PermitPrism</h1>
+            <p>Your gateway to secure and efficient license management.</p>
+        </div>
+    </div>
+    <div class="content">
+        <h2>Why Choose PermitPrism?</h2>
+        <div class="features">
+            <div class="feature">
+                <h3>Comprehensive License Management</h3>
+                <p>Manage all your licenses in one place with ease and efficiency.</p>
+            </div>
+            <div class="feature">
+                <h3>Real-Time Monitoring</h3>
+                <p>Stay updated with real-time notifications and alerts for your licenses.</p>
+            </div>
+            <div class="feature">
+                <h3>Secure and Reliable</h3>
+                <p>Our platform ensures your licenses are protected with top-notch security.</p>
+            </div>
+            <div class="feature">
+                <h3>Customizable Solutions</h3>
+                <p>Tailor our services to fit your specific licensing needs and requirements.</p>
+            </div>
+        </div>
+        <a href="#" class="cta-button">Get Started Today</a>
+    </div>
+</body>
+</html>
