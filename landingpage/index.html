@@ -9,46 +9,29 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        .banner {
-            width: 100%;
-            max-height: 400px;
-            overflow: hidden;
-            position: relative;
-        }
-        .banner img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .banner-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background-color: #000;
             color: #fff;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .banner-text h1 {
-            font-size: 3em;
-            margin: 0;
-        }
-        .banner-text p {
-            font-size: 1.2em;
-            margin: 10px 0;
+        canvas {
+            margin-bottom: 20px;
+            width: 80vw;
+            height: 80vw;
+            max-width: 200px;
+            max-height: 200px;
         }
         .content {
-            padding: 40px 20px;
             text-align: center;
         }
         .content h2 {
             font-size: 2em;
             margin-bottom: 20px;
+            border-bottom: 2px solid #fff;
+            display: inline-block;
+            padding-bottom: 10px;
         }
         .features {
             display: flex;
@@ -57,48 +40,59 @@
             gap: 20px;
         }
         .feature {
-            background-color: #fff;
+            background-color: #000;
+            border: 2px solid #fff;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 300px;
             text-align: left;
+            transition: background-color 0.3s;
+        }
+        .feature:hover {
+            background-color: #111;
         }
         .feature h3 {
             font-size: 1.5em;
             margin-bottom: 10px;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 5px;
         }
         .cta-button {
             padding: 15px 30px;
             font-size: 1.2em;
-            color: #fff;
-            background-color: #0070f3;
-            border: none;
+            color: #000;
+            background-color: #fff;
+            border: 2px solid #fff;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
             margin-top: 20px;
             display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
         }
         .cta-button:hover {
-            background-color: #005bb5;
+            background-color: #000;
+            color: #fff;
         }
         .footer {
             margin-top: 40px;
             padding: 20px;
-            background-color: #333;
+            background-color: #000;
             color: #fff;
             text-align: center;
+            border-top: 2px solid #fff;
         }
         .footer img {
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             margin-bottom: 10px;
+            border: 2px solid #fff;
         }
         .footer a {
-            color: #0070f3;
+            color: #fff;
             text-decoration: none;
+            border-bottom: 1px solid #fff;
         }
         .footer a:hover {
             text-decoration: underline;
@@ -106,12 +100,8 @@
     </style>
 </head>
 <body>
-    <div class="banner">
-        <img src="permitprism.webp" alt="PermitPrism Banner">
-        <div class="banner-text">
-            <h1>Welcome to PermitPrism</h1>
-            <p>Your gateway to secure and efficient license management.</p>
-        </div>
+    <div>
+    <canvas id="prismCanvas"></canvas>
     </div>
     <div class="content">
         <h2>Why Choose PermitPrism?</h2>
@@ -136,10 +126,118 @@
         <a href="#" class="cta-button">Get Started Today</a>
     </div>
     <div class="footer">
-        <img style="width:2rem; height:auto;" src="fav.png" alt="Tim Trussner">
+        <img src="fav.png" alt="Tim Trussner">
         <p>Created by Tim Trussner</p>
         <p>Open Source and Self-Hosted</p>
         <p><a href="https://github.com/buddhaman/PermitPrism" target="_blank">View on GitHub</a></p>
     </div>
+    <script>
+        const canvas = document.getElementById('prismCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+
+        let angle = 0;
+
+function drawPrism() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  
+  // Pyramid parameters: larger size and shifted downward
+  const size = canvas.width / 1.8; // Increased size
+  const half = size / 2;
+  const pyramidHeight = size; // Height of the pyramid
+  const xCenter = canvas.width / 2;
+  const yCenter = canvas.height / 2 + 30; // Moved down a bit
+  const bobbing = Math.sin(angle * 2) * 10; // Bobbing amplitude
+
+  // Define pyramid vertices: base (lying flat with z=0) and apex
+  const vertices = [
+    { x: -half, y: -half, z: 0 },   // Base: bottom-left
+    { x:  half, y: -half, z: 0 },   // Base: bottom-right
+    { x:  half, y:  half, z: 0 },   // Base: top-right
+    { x: -half, y:  half, z: 0 },   // Base: top-left
+    { x: 0,     y: 0,    z: pyramidHeight } // Apex
+  ];
+
+  // Rotation: spin around vertical (z), no tilt
+  const spin = angle;
+  const tilt = 0.0;
+
+  const rotated = vertices.map(v => {
+    const x1 = v.x * Math.cos(spin) - v.y * Math.sin(spin);
+    const y1 = v.x * Math.sin(spin) + v.y * Math.cos(spin);
+    const z1 = v.z;
+    const y2 = y1 * Math.cos(tilt) - z1 * Math.sin(tilt);
+    const z2 = y1 * Math.sin(tilt) + z1 * Math.cos(tilt);
+    return { x: x1, y: y2, z: z2 };
+  });
+
+  // Isometric projection for 3D effect
+  const isoAngle = Math.PI / 8.0;
+  const projected = rotated.map(v => ({
+    x: xCenter + (v.x - v.y) * Math.cos(isoAngle),
+    y: yCenter + (v.x + v.y) * Math.sin(isoAngle) - v.z - bobbing
+  }));
+
+  // Pyramid edges: base and sides from apex
+  const edges = [
+    [0, 1], [1, 2], [2, 3], [3, 0],
+    [4, 0], [4, 1], [4, 2], [4, 3]
+  ];
+
+  edges.forEach(edge => {
+    const [a, b] = edge;
+    ctx.beginPath();
+    ctx.moveTo(projected[a].x, projected[a].y);
+    ctx.lineTo(projected[b].x, projected[b].y);
+    ctx.stroke();
+  });
+
+  // Base eye center
+  const eyeBaseX = canvas.width / 2;
+  const eyeBaseY = canvas.height / 2;
+
+  // Jitter: random offset (real, unsmoothed jitter)
+  const jitterX = (Math.random() - 0.5) * 5.0; // ±4px range
+  const jitterY = (Math.random() - 0.5) * 5.0;
+
+  // Instant blink: closed for a few frames in a cycle
+  const blinkCycle = 200;  // total frames in a cycle
+  const blinkDuration = 5; // frames when eye is closed
+  const frame = Math.floor(angle * 100) % blinkCycle;
+  const isOpen = frame >= blinkDuration; // open except during blink
+
+  // Eye dimensions
+  const eyeWidth = canvas.width / 10;       // horizontal radius
+  const eyeHeight = isOpen ? eyeWidth / 2 : 0;  // vertical radius (0 when closed)
+
+  // Draw eye outline (ellipse)
+  ctx.beginPath();
+  ctx.ellipse(eyeBaseX + jitterX, eyeBaseY + jitterY, eyeWidth, eyeHeight, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Draw pupil if open
+  if (isOpen) {
+    const pupilRadius = eyeWidth / 4;
+    ctx.beginPath();
+    ctx.arc(eyeBaseX + jitterX, eyeBaseY + jitterY, pupilRadius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  angle += 0.02;
+  requestAnimationFrame(drawPrism);
+}
+
+
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        drawPrism();
+    </script>
 </body>
 </html>
